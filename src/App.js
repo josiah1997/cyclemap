@@ -4,12 +4,18 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function CycleMap() {
   const [log, setLog] = useState({
     mood: "",
+    moodNotes: "",
     energy: "",
+    energyNotes: "",
     stress: "",
+    stressNotes: "",
     sleep: "",
+    sleepNotes: "",
     motivation: "",
+    motivationNotes: "",
     journal: ""
   });
+
   const [entries, setEntries] = useState([]);
 
   const handleChange = (field) => (e) => {
@@ -26,18 +32,41 @@ export default function CycleMap() {
       geomagnetic: "Low"
     };
     setEntries([...entries, newEntry]);
-    setLog({ mood: "", energy: "", stress: "", sleep: "", motivation: "", journal: "" });
+    setLog({
+      mood: "",
+      moodNotes: "",
+      energy: "",
+      energyNotes: "",
+      stress: "",
+      stressNotes: "",
+      sleep: "",
+      sleepNotes: "",
+      motivation: "",
+      motivationNotes: "",
+      journal: ""
+    });
   };
 
   return (
     <div style={{ padding: '1rem', maxWidth: '600px', margin: 'auto' }}>
       <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
         <input placeholder="Mood (1-10)" value={log.mood} onChange={handleChange("mood")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+        <textarea placeholder="Mood notes..." value={log.moodNotes} onChange={handleChange("moodNotes")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
         <input placeholder="Energy (1-10)" value={log.energy} onChange={handleChange("energy")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+        <textarea placeholder="Energy notes..." value={log.energyNotes} onChange={handleChange("energyNotes")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
         <input placeholder="Stress (1-10)" value={log.stress} onChange={handleChange("stress")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+        <textarea placeholder="Stress notes..." value={log.stressNotes} onChange={handleChange("stressNotes")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
         <input placeholder="Sleep Quality (1-10)" value={log.sleep} onChange={handleChange("sleep")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+        <textarea placeholder="Sleep notes..." value={log.sleepNotes} onChange={handleChange("sleepNotes")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
         <input placeholder="Motivation (1-10)" value={log.motivation} onChange={handleChange("motivation")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
-        <textarea placeholder="Journal notes..." value={log.journal} onChange={handleChange("journal")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+        <textarea placeholder="Motivation notes..." value={log.motivationNotes} onChange={handleChange("motivationNotes")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
+        <textarea placeholder="General journal notes..." value={log.journal} onChange={handleChange("journal")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
+
         <button onClick={handleSubmit} style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Log Entry</button>
       </div>
 
