@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function CycleMap() {
@@ -18,6 +18,19 @@ export default function CycleMap() {
 
   const [entries, setEntries] = useState([]);
 
+  // Load entries from localStorage on first load
+  useEffect(() => {
+    const stored = localStorage.getItem("cyclemap-entries");
+    if (stored) {
+      setEntries(JSON.parse(stored));
+    }
+  }, []);
+
+  // Save entries to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("cyclemap-entries", JSON.stringify(entries));
+  }, [entries]);
+
   const handleChange = (field) => (e) => {
     setLog({ ...log, [field]: e.target.value });
   };
@@ -31,7 +44,8 @@ export default function CycleMap() {
       schumann: "Normal",
       geomagnetic: "Low"
     };
-    setEntries([...entries, newEntry]);
+    const updatedEntries = [...entries, newEntry];
+    setEntries(updatedEntries);
     setLog({
       mood: "",
       moodNotes: "",
@@ -45,6 +59,11 @@ export default function CycleMap() {
       motivationNotes: "",
       journal: ""
     });
+  };
+
+  const handleDelete = (timestamp) => {
+    const updated = entries.filter(entry => entry.timestamp !== timestamp);
+    setEntries(updated);
   };
 
   return (
@@ -84,6 +103,22 @@ export default function CycleMap() {
             <Line type="monotone" dataKey="motivation" stroke="#ffc658" name="Motivation" />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <h3>Logged Entries</h3>
+        {entries.map((entry, index) => (
+          <div key={index} style={{ padding: '0.5rem', borderBottom: '1px solid #ccc' }}>
+            <strong>{entry.timestamp}</strong>
+            <div>Mood: {entry.mood}, Energy: {entry.energy}, Stress: {entry.stress}, Sleep: {entry.sleep}, Motivation: {entry.motivation}</div>
+            <button
+              onClick={() => handleDelete(entry.timestamp)}
+              style={{ marginTop: '0.5rem', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.25rem 0.5rem' }}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
