@@ -31,6 +31,37 @@ export default function CycleMap() {
     localStorage.setItem("cyclemap-entries", JSON.stringify(entries));
   }, [entries]);
 
+import { useState, useEffect } from "react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+export default function CycleMap() {
+  const [log, setLog] = useState({
+    mood: "",
+    moodNotes: "",
+    energy: "",
+    energyNotes: "",
+    stress: "",
+    stressNotes: "",
+    sleep: "",
+    sleepNotes: "",
+    motivation: "",
+    motivationNotes: "",
+    journal: ""
+  });
+
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("cyclemap-entries");
+    if (stored) {
+      setEntries(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cyclemap-entries", JSON.stringify(entries));
+  }, [entries]);
+
   const handleChange = (field) => (e) => {
     setLog({ ...log, [field]: e.target.value });
   };
@@ -66,6 +97,35 @@ export default function CycleMap() {
     setEntries(updated);
   };
 
+  const handleExport = () => {
+    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "cyclemap-log.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (Array.isArray(imported)) {
+          setEntries(imported);
+        } else {
+          alert("Invalid file format");
+        }
+      } catch (err) {
+        alert("Failed to load backup");
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div style={{ padding: '1rem', maxWidth: '600px', margin: 'auto' }}>
       <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
@@ -86,7 +146,14 @@ export default function CycleMap() {
 
         <textarea placeholder="General journal notes..." value={log.journal} onChange={handleChange("journal")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
 
-        <button onClick={handleSubmit} style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Log Entry</button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <button onClick={handleSubmit} style={{ flex: 1, padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Log Entry</button>
+          <button onClick={handleExport} style={{ flex: 1, padding: '0.5rem 1rem', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px' }}>Save Backup</button>
+          <label style={{ flex: 1, backgroundColor: '#ffc107', color: '#000', borderRadius: '4px', padding: '0.5rem 1rem', textAlign: 'center', cursor: 'pointer' }}>
+            Load Backup
+            <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
+          </label>
+        </div>
       </div>
 
       <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem' }}>
