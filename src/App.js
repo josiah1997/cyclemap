@@ -1,51 +1,16 @@
 import { useState, useEffect } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer
+} from "recharts";
 
 export default function CycleMap() {
   const [log, setLog] = useState({
-    mood: "",
-    moodNotes: "",
-    energy: "",
-    energyNotes: "",
-    stress: "",
-    stressNotes: "",
-    sleep: "",
-    sleepNotes: "",
-    motivation: "",
-    motivationNotes: "",
-    journal: ""
-  });
-
-  const [entries, setEntries] = useState([]);
-
-  // Load entries from localStorage on first load
-  useEffect(() => {
-    const stored = localStorage.getItem("cyclemap-entries");
-    if (stored) {
-      setEntries(JSON.parse(stored));
-    }
-  }, []);
-
-  // Save entries to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("cyclemap-entries", JSON.stringify(entries));
-  }, [entries]);
-
-import { useState, useEffect } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
-export default function CycleMap() {
-  const [log, setLog] = useState({
-    mood: "",
-    moodNotes: "",
-    energy: "",
-    energyNotes: "",
-    stress: "",
-    stressNotes: "",
-    sleep: "",
-    sleepNotes: "",
-    motivation: "",
-    motivationNotes: "",
+    mood: "", moodNotes: "",
+    energy: "", energyNotes: "",
+    stress: "", stressNotes: "",
+    sleep: "", sleepNotes: "",
+    motivation: "", motivationNotes: "",
     journal: ""
   });
 
@@ -53,9 +18,7 @@ export default function CycleMap() {
 
   useEffect(() => {
     const stored = localStorage.getItem("cyclemap-entries");
-    if (stored) {
-      setEntries(JSON.parse(stored));
-    }
+    if (stored) setEntries(JSON.parse(stored));
   }, []);
 
   useEffect(() => {
@@ -75,26 +38,19 @@ export default function CycleMap() {
       schumann: "Normal",
       geomagnetic: "Low"
     };
-    const updatedEntries = [...entries, newEntry];
-    setEntries(updatedEntries);
+    setEntries([...entries, newEntry]);
     setLog({
-      mood: "",
-      moodNotes: "",
-      energy: "",
-      energyNotes: "",
-      stress: "",
-      stressNotes: "",
-      sleep: "",
-      sleepNotes: "",
-      motivation: "",
-      motivationNotes: "",
+      mood: "", moodNotes: "",
+      energy: "", energyNotes: "",
+      stress: "", stressNotes: "",
+      sleep: "", sleepNotes: "",
+      motivation: "", motivationNotes: "",
       journal: ""
     });
   };
 
   const handleDelete = (timestamp) => {
-    const updated = entries.filter(entry => entry.timestamp !== timestamp);
-    setEntries(updated);
+    setEntries(entries.filter(entry => entry.timestamp !== timestamp));
   };
 
   const handleExport = () => {
@@ -147,9 +103,9 @@ export default function CycleMap() {
         <textarea placeholder="General journal notes..." value={log.journal} onChange={handleChange("journal")} style={{ display: 'block', width: '100%', marginBottom: '0.5rem' }} />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <button onClick={handleSubmit} style={{ flex: 1, padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Log Entry</button>
-          <button onClick={handleExport} style={{ flex: 1, padding: '0.5rem 1rem', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px' }}>Save Backup</button>
-          <label style={{ flex: 1, backgroundColor: '#ffc107', color: '#000', borderRadius: '4px', padding: '0.5rem 1rem', textAlign: 'center', cursor: 'pointer' }}>
+          <button onClick={handleSubmit} style={{ flex: 1, padding: '0.5rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Log Entry</button>
+          <button onClick={handleExport} style={{ flex: 1, padding: '0.5rem', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px' }}>Save Backup</button>
+          <label style={{ flex: 1, backgroundColor: '#ffc107', color: '#000', borderRadius: '4px', padding: '0.5rem', textAlign: 'center', cursor: 'pointer' }}>
             Load Backup
             <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
           </label>
@@ -163,11 +119,11 @@ export default function CycleMap() {
             <XAxis dataKey="timestamp" hide={true} />
             <YAxis domain={[0, 10]} />
             <Tooltip />
-            <Line type="monotone" dataKey="mood" stroke="#8884d8" name="Mood" />
-            <Line type="monotone" dataKey="energy" stroke="#82ca9d" name="Energy" />
-            <Line type="monotone" dataKey="stress" stroke="#ff7300" name="Stress" />
-            <Line type="monotone" dataKey="sleep" stroke="#00bcd4" name="Sleep" />
-            <Line type="monotone" dataKey="motivation" stroke="#ffc658" name="Motivation" />
+            <Line type="monotone" dataKey="mood" stroke="#8884d8" />
+            <Line type="monotone" dataKey="energy" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="stress" stroke="#ff7300" />
+            <Line type="monotone" dataKey="sleep" stroke="#00bcd4" />
+            <Line type="monotone" dataKey="motivation" stroke="#ffc658" />
           </LineChart>
         </ResponsiveContainer>
       </div>
